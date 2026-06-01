@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('admin@clinic.com')
-  const [password, setPassword] = useState('leng@012011')
+const [password, setPassword] = useState('password')
   const [remember, setRemember] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
