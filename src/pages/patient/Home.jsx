@@ -3,8 +3,10 @@ import { Calendar, Clipboard, Pill, Clock, ArrowRight } from 'lucide-react'
 import { fetchAppointments } from '../../services/appointmentService'
 import { fetchMedicalRecords } from '../../services/medicalRecordService'
 import { formatAppointmentDate } from '../../utils/appointments'
-
+import { useAuth } from "../../context/AuthContext";
+ 
 export default function Home() {
+   const { user } = useAuth();
   const [appointments, setAppointments] = useState([])
   const [medicalRecords, setMedicalRecords] = useState([])
   const [loading, setLoading] = useState(true)
@@ -39,7 +41,7 @@ export default function Home() {
   
       <div className="relative overflow-hidden rounded-3xl bg-[#1976D2] p-6 text-white shadow-md md:p-8">
         <div className="relative z-10 max-w-xl space-y-2">
-          <p className="text-sm font-medium text-blue-100">សួស្តី, អ្នកជំងឺ!</p>
+          <p className="text-xl font-extrabold  text-blue-100">សួស្តី, {user?.name}!</p>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">តាមដានសុខភាពរបស់អ្នក</h1>
           <p className="text-sm text-blue-100/90">
             ប្រព័ន្ធគ្រប់គ្រងគ្លីនិកឆ្លាតវៃ សម្រាប់តាមដានការណាត់ជួប លទ្ធផលពិនិត្យ និងព័ត៌មានសុខភាពប្រចាំថ្ងៃ។

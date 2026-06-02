@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { createAppointment } from "../../services/appointmentService";
-import { fetchDoctors, fetchDoctorSchedules } from "../../services/doctorService";
+import {
+  fetchDoctors,
+  fetchDoctorSchedules,
+} from "../../services/doctorService";
 import {
   CalendarDays,
   Clock3,
@@ -39,7 +42,9 @@ function StepPill({ index, step, label }) {
         {done ? <CheckCircle2 size={18} /> : index}
       </div>
       <div>
-        <p className={`text-sm font-semibold ${active ? "text-slate-900" : "text-slate-500"}`}>
+        <p
+          className={`text-sm font-semibold ${active ? "text-slate-900" : "text-slate-500"}`}
+        >
           {label}
         </p>
       </div>
@@ -72,7 +77,7 @@ function BookAppointment() {
   useEffect(() => {
     fetchDoctors()
       .then((data) => {
-        const res = Array.isArray(data) ? data : data.data ?? [];
+        const res = Array.isArray(data) ? data : (data.data ?? []);
         const formatted = res.map((d) => ({
           id: d.id,
           name: d.user?.name || d.name || "Unknown Doctor",
@@ -107,7 +112,7 @@ function BookAppointment() {
             schedules.map((s) => ({
               id: s.id,
               time: s.start_time ? s.start_time.substring(0, 5) : s.time,
-            }))
+            })),
           );
         } else {
           setAvailableSlots(DEFAULT_SLOTS);
@@ -120,8 +125,13 @@ function BookAppointment() {
   }, [form.doctor, form.date]);
 
   const departments = useMemo(() => {
-    const uniqueDepts = [...new Set(doctors.map((d) => d.dept))].filter(Boolean);
-    return uniqueDepts.map((dept, index) => ({ id: `dept-${index}`, label: dept }));
+    const uniqueDepts = [...new Set(doctors.map((d) => d.dept))].filter(
+      Boolean,
+    );
+    return uniqueDepts.map((dept, index) => ({
+      id: `dept-${index}`,
+      label: dept,
+    }));
   }, [doctors]);
 
   const filteredDoctors = useMemo(() => {
@@ -131,15 +141,21 @@ function BookAppointment() {
 
   const selectedDoctor = useMemo(
     () => doctors.find((d) => String(d.id) === String(form.doctor)) || null,
-    [form.doctor, doctors]
+    [form.doctor, doctors],
   );
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const handleConfirm = async () => {
-    if (!form.doctor) { setBookError("សូមជ្រើសរើសវេជ្ជបណ្ឌិត"); return; }
-    if (!form.date || !form.time) { setBookError("សូមជ្រើសកាលបរិច្ឆេទ និងម៉ោង"); return; }
+    if (!form.doctor) {
+      setBookError("សូមជ្រើសរើសវេជ្ជបណ្ឌិត");
+      return;
+    }
+    if (!form.date || !form.time) {
+      setBookError("សូមជ្រើសកាលបរិច្ឆេទ និងម៉ោង");
+      return;
+    }
 
     setBookError("");
     setBooking(true);
@@ -206,25 +222,38 @@ function BookAppointment() {
         {/* CONTENT */}
         <div className="grid gap-5 xl:grid-cols-[1fr_350px]">
           <div className="space-y-5">
-
             {/* STEP 1 — DOCTOR */}
             {step === 1 && (
               <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-lg font-bold text-slate-900">ជ្រើសរើសផ្នែក និងវេជ្ជបណ្ឌិត</h2>
+                <h2 className="text-lg font-bold text-slate-900">
+                  ជ្រើសរើសផ្នែក និងវេជ្ជបណ្ឌិត
+                </h2>
 
                 {loadingDoctors ? (
-                  <p className="mt-5 text-slate-500 text-sm">កំពុងទាញយកទិន្នន័យគ្រូពេទ្យពី SQL Database...</p>
+                  <p className="mt-5 text-slate-500 text-sm">
+                    សូមរង់ចាំបន្តិច...
+                  </p>
                 ) : (
                   <>
                     <div className="mt-5">
-                      <p className="mb-3 text-sm font-semibold text-slate-700">ផ្នែកវេជ្ជសាស្ត្រ</p>
+                      <p className="mb-3 text-sm font-semibold text-slate-700">
+                        ផ្នែកវេជ្ជសាស្ត្រ
+                      </p>
                       <div className="grid gap-3 md:grid-cols-3">
                         {departments.map((d) => (
                           <button
                             key={d.id}
-                            onClick={() => setForm((p) => ({ ...p, department: d.label, doctor: "" }))}
+                            onClick={() =>
+                              setForm((p) => ({
+                                ...p,
+                                department: d.label,
+                                doctor: "",
+                              }))
+                            }
                             className={`rounded-2xl border p-4 text-left transition ${
-                              form.department === d.label ? "border-[#1976D2] bg-blue-50" : "border-slate-200 hover:bg-slate-50"
+                              form.department === d.label
+                                ? "border-[#1976D2] bg-blue-50"
+                                : "border-slate-200 hover:bg-slate-50"
                             }`}
                           >
                             <p className="font-semibold">{d.label}</p>
@@ -236,13 +265,22 @@ function BookAppointment() {
                     <div className="mt-8">
                       <p className="mb-3 text-sm font-semibold text-slate-700">
                         វេជ្ជបណ្ឌិតដែលអាចរកបាន
-                        {form.department && <span className="ml-2 text-xs text-slate-400">({filteredDoctors.length} នាក់)</span>}
+                        {form.department && (
+                          <span className="ml-2 text-xs text-slate-400">
+                            ({filteredDoctors.length} នាក់)
+                          </span>
+                        )}
                       </p>
 
                       {filteredDoctors.length === 0 ? (
                         <div className="rounded-2xl border border-slate-200 p-8 text-center text-slate-400">
-                          <Stethoscope className="mx-auto mb-3 text-slate-300" size={36} />
-                          <p className="font-medium">មិនមានវេជ្ជបណ្ឌិតសម្រាប់ផ្នែកនេះទេ</p>
+                          <Stethoscope
+                            className="mx-auto mb-3 text-slate-300"
+                            size={36}
+                          />
+                          <p className="font-medium">
+                            មិនមានវេជ្ជបណ្ឌិតសម្រាប់ផ្នែកនេះទេ
+                          </p>
                         </div>
                       ) : (
                         <div className="grid gap-4 md:grid-cols-2">
@@ -250,7 +288,12 @@ function BookAppointment() {
                             <button
                               key={doc.id}
                               disabled={!doc.available}
-                              onClick={() => setForm((p) => ({ ...p, doctor: String(doc.id) }))}
+                              onClick={() =>
+                                setForm((p) => ({
+                                  ...p,
+                                  doctor: String(doc.id),
+                                }))
+                              }
                               className={`rounded-2xl border p-5 text-left transition ${
                                 !doc.available
                                   ? "opacity-50 bg-slate-50 cursor-not-allowed"
@@ -264,18 +307,26 @@ function BookAppointment() {
                                   <Stethoscope className="text-slate-500" />
                                 </div>
                                 <div className="flex-1">
-                                  <p className="font-bold text-slate-900">{doc.name}</p>
-                                  <p className={`mt-1 text-xs font-medium ${doc.available ? "text-emerald-600" : "text-rose-500"}`}>
-                                    {doc.available ? "អាចកក់បាន" : "មិនទាន់មានវេន"}
+                                  <p className="font-bold text-slate-900">
+                                    {doc.name}
                                   </p>
-                                  <p className="text-sm text-slate-500">{doc.title}</p>
+                                  <p
+                                    className={`mt-1 text-xs font-medium ${doc.available ? "text-emerald-600" : "text-rose-500"}`}
+                                  >
+                                    {doc.available
+                                      ? "អាចកក់បាន"
+                                      : "មិនទាន់មានវេន"}
+                                  </p>
+                                  <p className="text-sm text-slate-500">
+                                    {doc.title}
+                                  </p>
                                   <div className="mt-3 flex flex-wrap gap-2">
                                     <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
                                       បទពិសោធន៍ {doc.experience}
                                     </span>
-                                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                    {/* <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                                       {doc.fee}
-                                    </span>
+                                    </span> */}
                                   </div>
                                 </div>
                               </div>
@@ -292,15 +343,26 @@ function BookAppointment() {
             {/* STEP 2 — DATE & TIME */}
             {step === 2 && (
               <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-lg font-bold text-slate-900">ជ្រើសរើសថ្ងៃ និងម៉ោង</h2>
+                <h2 className="text-lg font-bold text-slate-900">
+                  ជ្រើសរើសថ្ងៃ និងម៉ោង
+                </h2>
                 <div className="mt-6 space-y-5">
                   <div>
-                    <label className="mb-2 block text-sm font-semibold text-slate-700">កាលបរិច្ឆេទ</label>
+                    <label className="mb-2 block text-sm font-semibold text-slate-700">
+                      កាលបរិច្ឆេទ
+                    </label>
                     <input
                       type="date"
                       min={new Date().toISOString().split("T")[0]}
                       value={form.date}
-                      onChange={(e) => setForm((p) => ({ ...p, date: e.target.value, time: "", schedule_id: null }))}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          date: e.target.value,
+                          time: "",
+                          schedule_id: null,
+                        }))
+                      }
                       className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-[#1976D2]"
                     />
                   </div>
@@ -308,21 +370,37 @@ function BookAppointment() {
                   <div>
                     <label className="mb-3 block text-sm font-semibold text-slate-700">
                       ម៉ោងដែលអាចកក់បាន
-                      {loadingSlots && <span className="ml-2 text-xs font-normal text-slate-400">កំពុងផ្ទុក...</span>}
+                      {loadingSlots && (
+                        <span className="ml-2 text-xs font-normal text-slate-400">
+                          កំពុងផ្ទុក...
+                        </span>
+                      )}
                     </label>
 
                     {!form.date ? (
-                      <p className="text-xs italic text-slate-400">សូមជ្រើសរើសកាលបរិច្ឆេទមុន</p>
+                      <p className="text-xs italic text-slate-400">
+                        សូមជ្រើសរើសកាលបរិច្ឆេទមុន
+                      </p>
                     ) : loadingSlots ? (
-                      <p className="text-xs italic text-slate-400">កំពុងផ្ទុកម៉ោង...</p>
+                      <p className="text-xs italic text-slate-400">
+                        កំពុងផ្ទុកម៉ោង...
+                      </p>
                     ) : availableSlots.length === 0 ? (
-                      <p className="text-xs italic text-slate-400">មិនមានម៉ោងទំនេរ</p>
+                      <p className="text-xs italic text-slate-400">
+                        មិនមានម៉ោងទំនេរ
+                      </p>
                     ) : (
                       <div className="grid grid-cols-3 gap-3 md:grid-cols-5">
                         {availableSlots.map((slot, index) => (
                           <button
                             key={index}
-                            onClick={() => setForm((p) => ({ ...p, time: slot.time, schedule_id: slot.id }))}
+                            onClick={() =>
+                              setForm((p) => ({
+                                ...p,
+                                time: slot.time,
+                                schedule_id: slot.id,
+                              }))
+                            }
                             className={`rounded-xl border px-3 py-3 text-sm font-semibold transition ${
                               form.time === slot.time
                                 ? "border-[#1976D2] bg-blue-50 text-[#1976D2]"
@@ -343,24 +421,34 @@ function BookAppointment() {
             {step === 3 && (
               <div className="space-y-5">
                 <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                  <h2 className="text-lg font-bold text-slate-900">ព័ត៌មានបន្ថែម</h2>
+                  <h2 className="text-lg font-bold text-slate-900">
+                    ព័ត៌មានបន្ថែម
+                  </h2>
                   <div className="mt-5 space-y-5">
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-700">មូលហេតុនៃការមកពិនិត្យ</label>
+                      <label className="mb-2 block text-sm font-semibold text-slate-700">
+                        មូលហេតុនៃការមកពិនិត្យ
+                      </label>
                       <textarea
                         rows={4}
                         value={form.reason}
-                        onChange={(e) => setForm((p) => ({ ...p, reason: e.target.value }))}
+                        onChange={(e) =>
+                          setForm((p) => ({ ...p, reason: e.target.value }))
+                        }
                         placeholder="ឧ. ឈឺក្បាល ឬ តាមដានសម្ពាធឈាម..."
                         className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-[#1976D2]"
                       />
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-700">កំណត់សម្គាល់បន្ថែម</label>
+                      <label className="mb-2 block text-sm font-semibold text-slate-700">
+                        កំណត់សម្គាល់បន្ថែម
+                      </label>
                       <textarea
                         rows={4}
                         value={form.note}
-                        onChange={(e) => setForm((p) => ({ ...p, note: e.target.value }))}
+                        onChange={(e) =>
+                          setForm((p) => ({ ...p, note: e.target.value }))
+                        }
                         placeholder="ឧ. ប្រវត្តិជំងឺ ឬ ប្រតិកម្មថ្នាំ..."
                         className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-[#1976D2]"
                       />
@@ -400,7 +488,9 @@ function BookAppointment() {
                 </button>
               )}
             </div>
-            {bookError && <p className="mt-3 text-sm text-red-600">{bookError}</p>}
+            {bookError && (
+              <p className="mt-3 text-sm text-red-600">{bookError}</p>
+            )}
           </div>
 
           {/* SIDEBAR */}
@@ -412,28 +502,36 @@ function BookAppointment() {
                   <User size={16} className="text-slate-400" />
                   <div>
                     <p className="text-slate-500">វេជ្ជបណ្ឌិត</p>
-                    <p className="font-semibold text-slate-800">{selectedDoctor?.name || "—"}</p>
+                    <p className="font-semibold text-slate-800">
+                      {selectedDoctor?.name || "—"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <CalendarDays size={16} className="text-slate-400" />
                   <div>
                     <p className="text-slate-500">កាលបរិច្ឆេទ</p>
-                    <p className="font-semibold text-slate-800">{form.date || "—"}</p>
+                    <p className="font-semibold text-slate-800">
+                      {form.date || "—"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock3 size={16} className="text-slate-400" />
                   <div>
                     <p className="text-slate-500">ម៉ោង</p>
-                    <p className="font-semibold text-slate-800">{form.time || "—"}</p>
+                    <p className="font-semibold text-slate-800">
+                      {form.time || "—"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <FileText size={16} className="text-slate-400" />
                   <div>
                     <p className="text-slate-500">ផ្នែក</p>
-                    <p className="font-semibold text-slate-800">{form.department || "—"}</p>
+                    <p className="font-semibold text-slate-800">
+                      {form.department || "—"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -451,10 +549,16 @@ function BookAppointment() {
             </div>
             <div className="mt-5 text-center">
               <h2 className="text-2xl font-bold text-slate-900">កក់ជោគជ័យ</h2>
-              <p className="mt-2 text-sm text-slate-500">ការណាត់ជួបរបស់អ្នកត្រូវបានបញ្ចូន​ សូមរងចាំការបញ្ជាក់ពីមន្ទីរពេទ្យ</p>
+              <p className="mt-2 text-sm text-slate-500">
+                ការណាត់ជួបរបស់អ្នកត្រូវបានបញ្ចូន​
+                សូមរងចាំការបញ្ជាក់ពីមន្ទីរពេទ្យ
+              </p>
             </div>
             <button
-              onClick={() => { setShowSuccess(false); window.location.href = "/patient/home"; }}
+              onClick={() => {
+                setShowSuccess(false);
+                window.location.href = "/patient/home";
+              }}
               className="mt-6 w-full rounded-2xl bg-[#1976D2] py-3 text-sm font-semibold text-white"
             >
               ត្រឡប់ទៅកាន់ទំព័រដើម

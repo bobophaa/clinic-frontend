@@ -56,7 +56,7 @@ function MyAppointments() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-slate-500">កំពុងផ្ទុកទិន្នន័យណាត់ជួបពី SQL Database...</p>
+      <p className="mt-5 text-slate-500 text-sm">សូមរង់ចាំបន្តិច...</p>
       ) : (
         <>
           {/* UPCOMING */}

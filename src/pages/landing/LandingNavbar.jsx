@@ -19,7 +19,7 @@ export default function LandingNavbar() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold text-[#1976D2]">
-    clinicSync
+          ClinicSync
         </Link>
 
         {/* Desktop Links */}

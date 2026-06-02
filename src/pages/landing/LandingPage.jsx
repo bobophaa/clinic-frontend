@@ -34,7 +34,6 @@ export default function LandingPage() {
   return (
     <div className="bg-white font-['Kantumruy_Pro',sans-serif]">
      
-      {/* Hero Section — បន្ថែម Sticky Nav Support លុបការដាច់ព្យញ្ជនៈ */}
       <section className="bg-[#F1F5F9] py-20">
         <div className="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
           
@@ -42,10 +41,9 @@ export default function LandingPage() {
           <div className="flex-1 space-y-6">
             <p className="text-[#1976D2] text-sm font-bold tracking-wide flex items-center gap-2">
               <span className="w-6 h-0.5 bg-[#1976D2] inline-block"></span>
-              ស្វាគមន៍មកកាន់គ្លីនិករបស់យើង
+              ស្វាគមន៍មកកាន់គ្លីនិក <h1 className="text-2xl font-bold text-[#1976D2]">ClinicSync</h1>
             </p>
             
-            {/* កែសម្រួលមិនឱ្យដាច់ពាក្យ "គឺជា" និងទំហំអក្សរឱ្យសមល្មម */}
             <h1 className="text-4xl md:text-[46px] font-bold text-gray-800 leading-tight">
               សុខភាពរបស់អ្នកគឺជា&nbsp;
               <span className="text-[#1976D2] text-[52px] font-extrabold block mt-2 leading-none">
@@ -62,7 +60,6 @@ export default function LandingPage() {
               ដើម្បីធានាថាអ្នកទទួលបានការថែទាំដែលច្បាស់លាស់ និងប្រកបដោយក្តីមេត្តាបំផុត។
             </p>
             
-            {/* CTA BUTTONS — កែប្រែទៅជា Premium Modern Style */}
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
                 to="/login"
