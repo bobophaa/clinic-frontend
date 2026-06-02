@@ -1,61 +1,78 @@
 import { NavLink } from "react-router-dom";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-function Sidebar() {
+function Sidebar({ open, setOpen }) {
   const { roleMenus, user } = useAuth();
 
   return (
-    <aside className="sticky top-0 h-screen w-[240px] shrink-0 bg-white border-r border-slate-200 text-slate-800 shadow-sm">
-      <div className="flex h-full flex-col">
-        {/* Logo */}
-        <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-5">
-          <div className="rounded-xl bg-blue-50 p-2.5 border border-blue-100">
-            <CalendarDays size={20} className="text-blue-600" />
-          </div>
+    <>
+      {/* Overlay (mobile) */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+        />
+      )}
 
-          <div>
-            <h1 className="text-base font-bold tracking-wide text-slate-900">
-              ClinicSync
-            </h1>
-            {/* ប្តូរអក្ខរាវិរុទ្ធពាក្យ ផ្ទាំង ឱ្យត្រូវស្តង់ដារ */}
-            <p className="text-xs text-slate-500">ប្រព័ន្ធគ្រប់គ្រងការណាត់ជួប</p>
-          </div>
-        </div>
+      <aside
+        className={`
+        fixed md:static z-50
+        h-screen w-[260px] bg-white border-r border-slate-200
+        transform transition-transform duration-300
+        ${open ? "translate-x-0" : "-translate-x-full"}
+        md:translate-x-0
+      `}
+      >
+        <div className="flex h-full flex-col">
 
-        {/* Menu */}
-        <nav className="flex-1 space-y-1.5 px-3 py-4">
-          {roleMenus.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `
-                group flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200
-                ${
-                  isActive
-                    ? "bg-blue-50 text-blue-600 font-semibold"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                }
-              `
-              }
+          {/* Logo */}
+          <div className="flex items-center justify-between border-b px-5 py-5">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="text-blue-600" />
+              <div>
+                <h1 className="font-bold">ClinicSync</h1>
+                <p className="text-xs text-gray-500">Clinic System</p>
+              </div>
+            </div>
+
+            {/* Close button (mobile only) */}
+            <button
+              onClick={() => setOpen(false)}
+              className="md:hidden"
             >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+              <X />
+            </button>
+          </div>
 
-        {/* User Role */}
-        <div className="border-t border-slate-100 px-5 py-4">
-          <div className="rounded-xl bg-slate-50 p-3 border border-slate-100">
-            <p className="text-xs font-medium text-slate-400">តួនាទីបច្ចុប្បន្ន</p>
-            <p className="mt-0.5 text-sm font-semibold text-slate-700 capitalize">
-              {user?.role || "-"}
-            </p>
+          {/* Menu */}
+          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+            {roleMenus.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  `block rounded-xl px-4 py-3 text-sm transition
+                  ${
+                    isActive
+                      ? "bg-blue-50 text-blue-600 font-semibold"
+                      : "text-slate-600 hover:bg-slate-50"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* User */}
+          <div className="border-t p-4 text-sm text-gray-600">
+            Role: <span className="font-semibold">{user?.role}</span>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
 
