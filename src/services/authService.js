@@ -1,7 +1,13 @@
 import api from "./api";
 
+/**
+ * Login helper.
+ * If the supplied email looks like an admin (contains "admin"), we hit the admin
+ * login endpoint; otherwise we use the normal user login.
+ */
 export async function login(email, password) {
-  const { data } = await api.post("/auth/login", {
+  const endpoint = email.toLowerCase().includes("admin") ? "/auth/admin/login" : "/auth/login";
+  const { data } = await api.post(endpoint, {
     email: email.trim().toLowerCase(),
     password,
   });
